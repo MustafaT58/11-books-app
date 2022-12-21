@@ -1,24 +1,22 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { getBooks } from '../function/http'
+import { useNavigate } from 'react-router-dom'
+import { BookContext } from '../contexts/BookContext'
+import BookTable from './BookTable'
 
 export default function BookFirstHand() {
-  const [bList, setBList] = useState([])
-
+  const navigate = useNavigate()
+  const bookCtx = useContext(BookContext)
+  const firstHandBooks = bookCtx.books.filter((b) => {
+    return (b.recyled === false)
+  })
+  console.log(firstHandBooks)
   useEffect(() => {
-    async function getAllBooks() {
-      try {
-        const books = await getBooks()
-        setBList(books.filter((b)=>{
-          return (b.recyled===false)
-        }))
-
-      }
-      catch (error) {
-        console.log(error)
-      }
+    if (firstHandBooks.length === 0) {
+      navigate("/")
     }
-    getAllBooks()
-  }, [])
+  },[firstHandBooks.length])
+  return (
+    <BookTable heading={"FirtHandBooks Books"} books={firstHandBooks} />
 
-  console.log(bList)
+  )
 }

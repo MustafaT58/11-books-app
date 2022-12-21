@@ -5,15 +5,32 @@ export const BookContext = createContext(
     {
         books: [],
         sortDesc: (books) => { },
+        addBook: ({ bookname, auther, description }) => { },
+        updateBook: ({ bookName, author, description }) => { },
+
     })
 //State  metot ismi , parametre
 
 function bookReducer(state, action) {
     switch (action.type) {
 
-        case "SET":
+        case "SORTD":
             const inverted = action.payload.reverse();
             return inverted;
+        case "DELETE":
+            return state.filter((book) => book.id !== action.payload)
+        case "ADD":
+            return [action.payload, ...state]
+        case "UPDATE":
+            const updatableBookIndex = state.findIndex(
+                (book) => book.id === action.payload.id
+            )
+            const updatableBook = state[updatableBookIndex]
+            const updatedItem = { ...updatableBook, ...action.payload.data }
+            const updatedBooks = [...state]
+            updatedBooks[updatableBookIndex] = updatedItem
+            return updatedBooks
+
         default:
             return state
     }
@@ -23,12 +40,29 @@ function BookProvider({ children }) {
     function sortDesc(books) {
 
         //alert (children)
-        dispatch({ type: 'SET', payload: books });
+        dispatch({ type: 'SORTD', payload: books });
     }
+    function deleteBook(id) {
+        dispatch({ type: 'DELETE', payload: id });
+    }
+
+    function addBook(bookData) {
+        dispatch({ type: 'ADD', payload: bookData });
+    }
+
+    function updateBook(id, bookData) {
+        dispatch({ type: 'UPDATE', payload: { id: id, data: bookData } });
+    }
+
     const value = {
         books: booksState,
         sortDesc: sortDesc,
+        deleteBook: deleteBook,
+        addBook: addBook,
+        updateBook: updateBook,
     }
+
+
 
     return (
         <BookContext.Provider value={value}>

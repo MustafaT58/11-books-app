@@ -1,33 +1,26 @@
-import React, { useEffect, useContext } from 'react'
-import { BookContext } from '../contexts/BookContext'
-
+import React, { useEffect, useContext, useState } from 'react'
+import { BookContext } from '../contexts/BookContext';
+import BookTable from './BookTable';
+import { useNavigate } from 'react-router-dom';
 export default function BookRecyled() {
+  const navigate = useNavigate()
 
-  const bookCtx=useContext(BookContext)
-  const rclBooks=bookCtx.sortDesc()
-  console.log(rclBooks)
-  
 
-  // useEffect(() => {
-  //   async function getAllBooks() {
-  //     try {
-  //       const books = await getBooks()
-  //       setBList(books.filter((b) => {
-  //         return (b.recyled === true)
-  //       }))
-  //     }
-  //     catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  //   getAllBooks()
-  // }, [])
-  // console.log(bList)
+  const bookCtx = useContext(BookContext);
+
+  const rclBooks = bookCtx.books.filter((c) => {
+    return (c.recyled === true)
+  })
+
+  useEffect(() => {
+    if (rclBooks.length == 0) {
+      navigate("/")
+    }
+  },[rclBooks.length])
+  // console.log(rclBooks)
 
   return (
 
-    <>
-
-    </>
+    <BookTable heading={"Recyled Books"} books={rclBooks} />
   )
 }

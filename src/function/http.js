@@ -15,20 +15,22 @@ export async function getBooks() {
             bookname: response.data[key].bookname,
             picture: response.data[key].picture,
             recyled: response.data[key].recyled
-
         };
         books.push(bookObj);
     }
     return books;
 }
-export async function addBook(book) {
+export async function addSelectedBook(book) {
     const response = await axios.post(url + 'books.json', book);
     const id = response.data.name;
     return id;
 }
-export function updateSelectedBook(id,bookData){
-    return axios.put(url+`books/${id}.json`,bookData)
+export function updateSelectedBook(id, bookData) {
+    return axios.put(url + `books/${id}.json`, bookData)
 }
-export function getBook(id){
-    return axios.get(url+`books/${id}.json`)
+export function getBook(id) {
+    return axios.get(url + `books/${id}.json`)
+}
+export function deleteSelectedBook(id) {
+    return axios.delete(url + `books/${id}.json`)
 }
